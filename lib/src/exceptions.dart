@@ -1,0 +1,1 @@
+class RecordNotFoundException implements Exception {}
