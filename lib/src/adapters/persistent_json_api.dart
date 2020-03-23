@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rest_data/rest_data.dart';
 
+import '../exceptions.dart';
 import '../hive_adapters/json_api.dart';
 
 typedef FilterFunction = bool Function(JsonApiDocument);
@@ -132,7 +133,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     Iterable<String> ids,
   ) async {
     var box = await openBox(endpoint);
-    var docs = ids.map((id) => box.get(id)).toList();
+    var docs =
+        ids.map((id) => box.get(id)).where((doc) => doc != null).toList();
+    if (ids.isNotEmpty && docs.isEmpty) {
+      throw RecordNotFoundException();
+    }
     return JsonApiManyDocument(docs);
   }
 
