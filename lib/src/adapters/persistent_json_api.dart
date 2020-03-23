@@ -125,7 +125,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   Future<JsonApiDocument> boxGetOne(String endpoint, String id) async {
     var box = await openBox(endpoint);
-    return box.get(id);
+    var doc = box.get(id);
+    if (doc == null) {
+      throw RecordNotFoundException();
+    }
+    return doc;
   }
 
   Future<JsonApiManyDocument> boxGetMany(
