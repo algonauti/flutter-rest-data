@@ -5,8 +5,6 @@ import 'package:rest_data/rest_data.dart';
 import '../exceptions.dart';
 import '../hive_adapters/json_api.dart';
 
-typedef FilterFunction = bool Function(JsonApiDocument);
-
 class PersistentJsonApiAdapter extends JsonApiAdapter {
   PersistentJsonApiAdapter(String hostname, String apiPath)
       : super(hostname, apiPath);
