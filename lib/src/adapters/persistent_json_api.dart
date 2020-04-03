@@ -80,8 +80,10 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
         List<String> ids = params['filter[id]'].split(',');
         docs = await boxGetMany(endpoint, ids);
       } else {
-        // TODO use filter function
         docs = await findAllPersisted(endpoint);
+        if (filter != null) {
+          docs.filter(filter);
+        }
       }
       cacheMany(endpoint, docs);
     }
