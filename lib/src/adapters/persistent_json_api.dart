@@ -127,7 +127,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var box = await openBox(endpoint);
     var doc = box.get(id);
     if (doc == null) {
-      throw RecordNotFoundException();
+      throw LocalRecordNotFoundException();
     }
     return doc;
   }
@@ -140,7 +140,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var docs =
         ids.map((id) => box.get(id)).where((doc) => doc != null).toList();
     if (ids.isNotEmpty && docs.isEmpty) {
-      throw RecordNotFoundException();
+      throw LocalRecordNotFoundException();
     }
     return JsonApiManyDocument(docs);
   }

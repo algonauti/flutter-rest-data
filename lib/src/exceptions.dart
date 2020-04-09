@@ -1,1 +1,1 @@
-class RecordNotFoundException implements Exception {}
+class LocalRecordNotFoundException implements Exception {}
