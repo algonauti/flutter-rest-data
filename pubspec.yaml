@@ -8,8 +8,10 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  hive: ^1.4.1+1
-  hive_flutter: ^0.3.0+2
+  hive_flutter:
+    git:
+      url: git://github.com/hivedb/hive.git
+      path: hive_flutter
   rest_data:
     git:
       url: git://github.com/algonauti/dart-rest-data.git
