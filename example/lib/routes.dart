@@ -1,6 +1,15 @@
-import 'package:example/views/pages/exportPages.dart';
+import 'package:example/views/pages/export_pages.dart';
 import 'package:flutter/material.dart';
 import 'constants/constants.dart';
+
+
+
+class AppRouteName {
+  static const String HOME_SCREEN = "/home";
+  static const String BEERS_SCREEN = "/beersScreen";
+  static const String BEER_INFO_SCREEN = "/beerInfoScreen";
+
+}
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

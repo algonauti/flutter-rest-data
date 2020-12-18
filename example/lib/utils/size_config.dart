@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SizeConfig {
-  // static double _blockWidth;
-  // static double _blockHeight;
-
   static double textMultiplier;
   static double imageMultiplier;
   static double heightMultiplier;
@@ -17,7 +14,5 @@ class SizeConfig {
     imageMultiplier = _blockWidth;
     heightMultiplier = _blockHeight;
     widthMultiplier = _blockWidth;
-
-    print('block width -> $_blockWidth, block height -> $_blockHeight');
   }
 }

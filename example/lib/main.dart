@@ -1,4 +1,4 @@
-import 'package:example/utils/sizeConfig.dart';
+import 'package:example/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'routes.dart' as router;
