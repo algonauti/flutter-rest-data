@@ -1,7 +1,6 @@
 import 'package:example/data/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rest_data/flutter_rest_data.dart';
-import 'package:example/constants/constants.dart';
 
 class APIHelper<T> {
   PersistentJsonApiAdapter adapter;
