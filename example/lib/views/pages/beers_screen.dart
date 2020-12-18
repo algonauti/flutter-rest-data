@@ -82,4 +82,6 @@ class _BeersScreenState extends State<BeersScreen> {
       ),
     );
   }
+
+
 }
