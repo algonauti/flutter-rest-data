@@ -1,5 +1,4 @@
 import 'package:example/data/global.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rest_data/flutter_rest_data.dart';
 
 class APIHelper<T> {
@@ -10,11 +9,9 @@ class APIHelper<T> {
   String apiPath = "/api";
 
   static const String API_AUTH_TOKEN = '';
-
   APIHelper(this.path) {
     adapterInit();
   }
-
   Future<void> adapterInit() async {
     adapter = PersistentJsonApiAdapter(apiHost, apiPath);
     adapter.init();
@@ -32,7 +29,6 @@ class APIHelper<T> {
 
   Future<dynamic> find(String id) async {
     JsonApiDocument docs;
-
     try {
       docs = await adapter.find(path, id, forceReload: true);
     } catch (e) {

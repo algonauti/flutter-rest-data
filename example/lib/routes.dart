@@ -1,13 +1,10 @@
 import 'package:example/views/pages/export_pages.dart';
 import 'package:flutter/material.dart';
 
-
-
 class AppRouteName {
   static const String HOME_SCREEN = "/home";
   static const String BEERS_SCREEN = "/beersScreen";
   static const String BEER_INFO_SCREEN = "/beerInfoScreen";
-
 }
 
 Route<dynamic> generateRoute(RouteSettings settings) {
