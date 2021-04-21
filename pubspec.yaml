@@ -12,7 +12,7 @@ dependencies:
     git:
       url: git://github.com/hivedb/hive.git
       path: hive_flutter
-  rest_data: ^0.3.2
+  rest_data: ^0.3.3
   flutter:
     sdk: flutter
 
