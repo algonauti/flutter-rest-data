@@ -152,7 +152,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   Future<void> boxPutMany(String endpoint, JsonApiManyDocument docs) async {
     var box = await openBox(endpoint);
-    var puts = List<Future>();
+    var puts = <Future>[];
     docs.forEach((doc) {
       puts.add(box.put(doc.id, doc));
     });
