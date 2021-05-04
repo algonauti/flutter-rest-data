@@ -9,10 +9,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  hive_flutter:
-    git:
-      url: git://github.com/hivedb/hive.git
-      path: hive_flutter
+  hive_flutter: ^1.0.0
   rest_data: ^0.3.3
   flutter:
     sdk: flutter
