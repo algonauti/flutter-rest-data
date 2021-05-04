@@ -3,6 +3,7 @@ description: Easily persist on device REST data from your backend
 version: 0.0.1
 author: Algonauti <info@algonauti.com>
 homepage: https://www.algonauti.com
+publish_to: none
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

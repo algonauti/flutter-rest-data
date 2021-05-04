@@ -2,6 +2,8 @@
 
 This package is built on top of [rest_data](https://github.com/algonauti/dart-rest-data). It uses [hive](https://github.com/hivedb/hive) to store on local device all data coming from your REST backend.
 
+[![CI](https://github.com/algonauti/flutter-rest-data/workflows/CI/badge.svg)](https://github.com/algonauti/flutter-rest-data/actions)
+
 ## Introduction
 
 It provides your app with a REST Adapter which behaves as follows - see [rest_data](https://github.com/algonauti/dart-rest-data)'s Readme to learn what an Adapter is in these packages 😉 
