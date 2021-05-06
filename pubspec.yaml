@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   hive_flutter: ^1.0.0
-  rest_data: ^0.3.3
+  rest_data: ^0.3.4
   flutter:
     sdk: flutter
 
