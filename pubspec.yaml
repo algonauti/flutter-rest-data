@@ -6,7 +6,7 @@ homepage: https://www.algonauti.com
 publish_to: none
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
   hive_flutter: ^1.0.0
