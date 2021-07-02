@@ -6,8 +6,15 @@ import '../exceptions.dart';
 import '../hive_adapters/json_api.dart';
 
 class PersistentJsonApiAdapter extends JsonApiAdapter {
-  PersistentJsonApiAdapter(String hostname, String apiPath)
-      : super(hostname, apiPath);
+  PersistentJsonApiAdapter(
+    String hostname,
+    String apiPath, {
+    bool useSSL: true,
+  }) : super(
+          hostname,
+          apiPath,
+          useSSL: useSSL,
+        );
 
   bool isOnline = true;
 

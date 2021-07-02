@@ -1,16 +1,15 @@
 name: flutter_rest_data
 description: Easily persist on device REST data from your backend
 version: 0.0.1
-author: Algonauti <info@algonauti.com>
 homepage: https://www.algonauti.com
 publish_to: none
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
   hive_flutter: ^1.0.0
-  rest_data: ^0.3.4
+  rest_data: ^0.4.0
   flutter:
     sdk: flutter
 
