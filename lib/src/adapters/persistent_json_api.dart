@@ -50,7 +50,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   @override
   Future<JsonApiDocument> fetch(String endpoint, String id) async {
-    JsonApiDocument doc;
+    JsonApiDocument? doc;
     if (isOnline) {
       doc = await super.fetch(endpoint, id);
       await boxPutOne(endpoint, doc);
@@ -59,7 +59,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
           ? (await findAdded(id))
           : (await boxGetOne(endpoint, id));
     }
-    return doc;
+    return doc!;
   }
 
   @override
@@ -77,14 +77,14 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   @override
   Future<JsonApiManyDocument> query(String endpoint, Map<String, String> params,
-      {FilterFunction filter}) async {
+      {FilterFunction? filter}) async {
     JsonApiManyDocument docs;
     if (isOnline) {
       docs = await super.query(endpoint, params);
       await boxPutMany(endpoint, docs);
     } else {
       if (params.containsKey('filter[id]')) {
-        List<String> ids = params['filter[id]'].split(',');
+        List<String> ids = params['filter[id]']!.split(',');
         docs = await boxGetMany(endpoint, ids);
       } else {
         docs = await findAllPersisted(endpoint);
@@ -108,7 +108,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
       await boxPutOne(endpoint, doc);
     } else {
       // TODO Handle Update case
-      doc = document as JsonApiDocument;
+      doc = document;
       int id = await boxAdd(endpoint, doc);
       doc.id = 'added:$id';
       cache(endpoint, doc);
@@ -127,8 +127,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     }
   }
 
-  Future<Box<JsonApiDocument>> openBox(String name) =>
-      Hive.openBox<JsonApiDocument>(name);
+  Future<Box<JsonApiDocument?>> openBox(String name) =>
+      Hive.openBox<JsonApiDocument?>(name);
 
   Future<JsonApiDocument> boxGetOne(String endpoint, String id) async {
     var box = await openBox(endpoint);
@@ -161,7 +161,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var box = await openBox(endpoint);
     var puts = <Future>[];
     docs.forEach((doc) {
-      puts.add(box.put(doc.id, doc));
+      puts.add(box.put(doc!.id, doc));
     });
     await Future.wait(puts);
   }
@@ -172,12 +172,12 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     return id;
   }
 
-  Future<Iterable<JsonApiDocument>> addedByEndpoint(String endpoint) async {
+  Future<Iterable<JsonApiDocument?>> addedByEndpoint(String endpoint) async {
     var box = await openBox('added');
-    return box.values.where((doc) => doc.endpoint == endpoint);
+    return box.values.where((doc) => doc!.endpoint == endpoint);
   }
 
-  Future<JsonApiDocument> findAdded(String id) async {
+  Future<JsonApiDocument?> findAdded(String id) async {
     var key = int.parse(id.replaceAll('added:', ''));
     var box = await openBox('added');
     return box.get(key);
