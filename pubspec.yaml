@@ -8,8 +8,11 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  rest_data: ^0.4.0
   hive_flutter: ^1.1.0
+  rest_data:
+    git:
+      url: https://github.com/MohsinN/dart-rest-data
+      ref: null_safety_migration
   flutter:
     sdk: flutter
 
