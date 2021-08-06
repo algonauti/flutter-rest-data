@@ -8,8 +8,8 @@ environment:
   sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
-  hive_flutter: ^1.0.0
   rest_data: ^0.4.0
+  hive_flutter: ^1.1.0
   flutter:
     sdk: flutter
 
