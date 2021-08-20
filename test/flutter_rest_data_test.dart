@@ -5,7 +5,7 @@ import 'helpers.dart';
 
 void main() {
   group('PersistentJsonApiAdapter', () {
-    PersistentJsonApiAdapter adapter;
+    late PersistentJsonApiAdapter adapter;
 
     setUpAll(() {
       initHive();
@@ -35,7 +35,7 @@ void main() {
             });
 
     group('when offline', () {
-      JsonApiDocument doc1, doc2, doc3;
+      JsonApiDocument? doc1, doc2, doc3;
       JsonApiManyDocument docs;
 
       setUp(() async {
@@ -51,8 +51,8 @@ void main() {
         var doc = await adapter.find('docs', '1');
         expect(doc is JsonApiDocument, isTrue);
         expect(doc.id, '1');
-        expect(doc.attributes == doc1.attributes, isTrue);
-        expect(doc.relationships == doc1.relationships, isTrue);
+        expect(doc.attributes == doc1!.attributes, isTrue);
+        expect(doc.relationships == doc1!.relationships, isTrue);
       });
 
       test('findMany() returns requested JsonApiDocument objects from Hive',
@@ -61,7 +61,7 @@ void main() {
         var returnedDocs = await adapter.findMany('docs', requestedIds);
         expect(returnedDocs is JsonApiManyDocument, isTrue);
         expect(returnedDocs.length, 2);
-        var returnedIds = returnedDocs.map((doc) => doc.id);
+        var returnedIds = returnedDocs.map((doc) => doc!.id);
         expect(returnedIds.toSet().containsAll(requestedIds), isTrue);
         expect(requestedIds.toSet().containsAll(returnedIds), isTrue);
       });
@@ -71,7 +71,7 @@ void main() {
         var returnedDocs = await adapter.findAll('docs');
         expect(returnedDocs is JsonApiManyDocument, isTrue);
         expect(returnedDocs.length, 3);
-        var returnedIds = returnedDocs.map((doc) => doc.id);
+        var returnedIds = returnedDocs.map((doc) => doc!.id);
         expect(returnedIds.toSet().containsAll(allIds), isTrue);
         expect(allIds.toSet().containsAll(returnedIds), isTrue);
       });
