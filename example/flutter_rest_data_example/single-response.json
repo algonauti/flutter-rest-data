@@ -1,0 +1,414 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "beers",
+      "attributes": {
+        "name": "Barrel Aged Hinterland",
+        "tagline": "A Most Beguiling Brew. Aged In Bourbon Casks.",
+        "description": "Hinterland is a beer long in the creation, and even longer in the appreciation. On the aroma, deep reverberating roasty bitterness and sweet dark chocolate. Also in evidence, woodsmoke, rich vanilla, mocha and marzipan. When tasting, Hinterland reveals itself as the beer moves from cellar temperature to something warmer, yielding all of the above plus dried fruit, rich ganache and ending on a resoundingly warming  nish redolent of chocolate liqueur or plum brandy. Aged in Bourbon Casks.",
+        "image_url": "https://images.punkapi.com/v2/216.png",
+        "alcohol_by_volume": "9",
+        "food_pairing": [
+          "Mulled cheddar buffalo burger",
+          "Venison with warm spices (cardamom) and sweet potato",
+          "Pure vanilla bean ice cream"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "1", "type": "ingredients" },
+            { "id": "2", "type": "ingredients" },
+            { "id": "3", "type": "ingredients" },
+            { "id": "4", "type": "ingredients" },
+            { "id": "5", "type": "ingredients" },
+            { "id": "6", "type": "ingredients" },
+            { "id": "7", "type": "ingredients" },
+            { "id": "8", "type": "ingredients" },
+            { "id": "9", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "2",
+      "type": "beers",
+      "attributes": {
+        "name": "Barrel Aged Albino Squid Assassin",
+        "tagline": "Red Rye IPA Aged In Rye Whisky Cask.",
+        "description": "This tentacled terminator packs a punch - ten punches to be precise. Each hop addition adds to the intense layers of depth in this red rye IPA. Toasty caramel \u0026 cinder toffee from crystal malts, cacao richness from intensely roasted malt and the spiciness of rye. Zesty pithiness from Citra and the robust resin of Chinook. This small batch exclusive brew is up-front intensity matched with twisted complexity. Aged in Rye Whisky Casks.",
+        "image_url": "https://images.punkapi.com/v2/217.png",
+        "alcohol_by_volume": "9.2",
+        "food_pairing": [
+          "Rocket and mozzarella salad with a cracked pepper dressing",
+          "Fried halibut with sweet potato fritters",
+          "Grapefruit and blood orange tart"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "10", "type": "ingredients" },
+            { "id": "11", "type": "ingredients" },
+            { "id": "12", "type": "ingredients" },
+            { "id": "13", "type": "ingredients" },
+            { "id": "14", "type": "ingredients" },
+            { "id": "15", "type": "ingredients" },
+            { "id": "16", "type": "ingredients" },
+            { "id": "17", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "3",
+      "type": "beers",
+      "attributes": {
+        "name": "Monk Hammer",
+        "tagline": "Our Ruthless IPA With A Belgian Twist.",
+        "description": "Jack Hammer has been single handedly ripping it up for quite some time. Now, the definitive bitter and twisted IPA, has spawned four Hammer Head off-springs. Monk Hammer is the first of our super-charge hyped up hybrids. A dark cloaked holy man packing an unholy punch. Belgian yeast and American hops untie on a cardinal scale. Steel yourself for biblical volumes of grapefruit, bow your head for a wave of spicy, fruity yeast character, then cross yourself for the bitterest of bitter finishes. Let your senses succumb to this 21st century incarnation. Monk Hammer – worship daily.",
+        "image_url": "https://images.punkapi.com/v2/218.png",
+        "alcohol_by_volume": "7.2",
+        "food_pairing": [
+          "Pesto chicken pizza",
+          "Beer braised Brussels sprouts",
+          "Crème brûlée"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "18", "type": "ingredients" },
+            { "id": "20", "type": "ingredients" },
+            { "id": "19", "type": "ingredients" },
+            { "id": "21", "type": "ingredients" },
+            { "id": "22", "type": "ingredients" },
+            { "id": "23", "type": "ingredients" },
+            { "id": "24", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "type": "beers",
+      "attributes": {
+        "name": "Ship Wreck",
+        "tagline": "Redacted Collaboration Ale.",
+        "description": "This mezcal-inspired brew is the shipwrecked remains of a collaboration brewed with former craft brewers Ballast Point. Brewed to encapsulate the flavours of mezcal, this beer smoulders with peaty and light woody notes, as well as intense fruity character.",
+        "image_url": "https://images.punkapi.com/v2/219.png",
+        "alcohol_by_volume": "13.8",
+        "food_pairing": [
+          "Shrimp aguachile",
+          "Mezcal marinated sirloin steak",
+          "Basil panna cotta with strawberries"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "25", "type": "ingredients" },
+            { "id": "26", "type": "ingredients" },
+            { "id": "27", "type": "ingredients" },
+            { "id": "28", "type": "ingredients" },
+            { "id": "29", "type": "ingredients" },
+            { "id": "30", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5",
+      "type": "beers",
+      "attributes": {
+        "name": "Blitz Series",
+        "tagline": "Fruit Infused Berlinerweisse.",
+        "description": "We are bringing back our Blitz Series to 2016. Every Blitz we brew is different, due to the spontaneous souring process, and each version has a great blend of all the different flavours we look for in a Berlinerwiesse.",
+        "image_url": "https://images.punkapi.com/v2/keg.png",
+        "alcohol_by_volume": "3.2",
+        "food_pairing": [
+          "Cheese boards",
+          "Sashimi sushi",
+          "French fries dressed in good oil and salt",
+          "Mac and Cheese"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "31", "type": "ingredients" },
+            { "id": "32", "type": "ingredients" },
+            { "id": "33", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6",
+      "type": "beers",
+      "attributes": {
+        "name": "Dog E",
+        "tagline": "Ninth Anniversary Imperial Stout.",
+        "description": "Dog E is a very special beer. This beer commemorates our 9th year in 2016. This beer originally appeared as AB:04 in 2010, perhaps the most sought after beer we ever brewed. Dog E is a 16.1% Imperial Stout brewed with copious amounts of dark malts, pure cacao and coffee, balanced by the subtle addition of naga chili, and barrel-aged. Perfect for ageing in your cellar, or drinking fresh if you’re lucky enough to get your paws on a bottle.",
+        "image_url": "https://images.punkapi.com/v2/222.png",
+        "alcohol_by_volume": "16.1",
+        "food_pairing": [
+          "Char sui pork buns",
+          "Spicy beef empanadas",
+          "Chocolate cheesecake"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "39", "type": "ingredients" },
+            { "id": "40", "type": "ingredients" },
+            { "id": "41", "type": "ingredients" },
+            { "id": "42", "type": "ingredients" },
+            { "id": "34", "type": "ingredients" },
+            { "id": "35", "type": "ingredients" },
+            { "id": "36", "type": "ingredients" },
+            { "id": "37", "type": "ingredients" },
+            { "id": "38", "type": "ingredients" },
+            { "id": "43", "type": "ingredients" },
+            { "id": "44", "type": "ingredients" },
+            { "id": "45", "type": "ingredients" },
+            { "id": "46", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7",
+      "type": "beers",
+      "attributes": {
+        "name": "Prototype Pils 2.0",
+        "tagline": "Revamped German Pils.",
+        "description": "Our spin on a light, dry and bitter German lager. Hop driven with malt taking a back seat, Pils 2.0 is lined up to become a regular brew.",
+        "image_url": "https://images.punkapi.com/v2/keg.png",
+        "alcohol_by_volume": "4.7",
+        "food_pairing": [
+          "Tuna \u0026 salmon sushi (with plenty of wasabi!)",
+          "Chipotle chicken burrito",
+          "Rhubarb fool with shortbread"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "47", "type": "ingredients" },
+            { "id": "48", "type": "ingredients" },
+            { "id": "49", "type": "ingredients" },
+            { "id": "50", "type": "ingredients" },
+            { "id": "51", "type": "ingredients" },
+            { "id": "52", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "8",
+      "type": "beers",
+      "attributes": {
+        "name": "AB:20",
+        "tagline": "Tiramisu Barley Wine.",
+        "description": "An English Barley Wine brewed with coffee and milk, with rich toasty \u0026 caramel flavours. To complete the tiramisu effect, we’ve blended this with a 3 year rum cask aged Imperial Stout.",
+        "image_url": "https://images.punkapi.com/v2/224.png",
+        "alcohol_by_volume": "14.2",
+        "food_pairing": [
+          "Cornish Yarg",
+          "Vanilla \u0026 raspberry panna cotta",
+          "Wild boar salami"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "53", "type": "ingredients" },
+            { "id": "54", "type": "ingredients" },
+            { "id": "55", "type": "ingredients" },
+            { "id": "56", "type": "ingredients" },
+            { "id": "57", "type": "ingredients" },
+            { "id": "58", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "9",
+      "type": "beers",
+      "attributes": {
+        "name": "Paradox Islay 2.0",
+        "tagline": "Islay Cask-Aged Imperial Stout.",
+        "description": "Intense peaty smoke layers on decadent roast coffee and chocolate in our Islay barrels aged paradox stout. One of the smokiest beers we have ever produced.",
+        "image_url": "https://images.punkapi.com/v2/225.png",
+        "alcohol_by_volume": "13",
+        "food_pairing": [
+          "Smoked mackerel \u0026 radish salad",
+          "Ossobuco",
+          "Dark chocolate \u0026 salted caramel brownie"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "59", "type": "ingredients" },
+            { "id": "60", "type": "ingredients" },
+            { "id": "61", "type": "ingredients" },
+            { "id": "62", "type": "ingredients" },
+            { "id": "63", "type": "ingredients" },
+            { "id": "64", "type": "ingredients" },
+            { "id": "65", "type": "ingredients" },
+            { "id": "66", "type": "ingredients" },
+            { "id": "67", "type": "ingredients" },
+            { "id": "68", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "10",
+      "type": "beers",
+      "attributes": {
+        "name": "Chili Hammer",
+        "tagline": "Our Ruthless IPA With A Fiery Twist.",
+        "description": "Chili Hammer is the third of our super-charged hyped up hybrids. A smooth tongued spicy assassin. Chili and American hops unite for a flavour bigger than Texas. Citrus peel, mango, with a hint of spice on the nose. Delivers big grapefruit and mango with a smooth chili kick, followed by the bitterest of bitter finishes. Chili Hammer – turn up the gas.",
+        "image_url": "https://images.punkapi.com/v2/226.png",
+        "alcohol_by_volume": "7.2",
+        "food_pairing": [
+          "Aubergine and chickpea tagine",
+          "Firehouse chili con carne",
+          "Vanilla milkshake"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "69", "type": "ingredients" },
+            { "id": "71", "type": "ingredients" },
+            { "id": "70", "type": "ingredients" },
+            { "id": "72", "type": "ingredients" },
+            { "id": "73", "type": "ingredients" },
+            { "id": "74", "type": "ingredients" },
+            { "id": "75", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "11",
+      "type": "beers",
+      "attributes": {
+        "name": "Brewdog Vs Beavertown",
+        "tagline": "Coffee And Cigarettes.",
+        "description": "Loaded with roasty coffee notes and balanced with complex tobacco character. With smoky flavours from the malt, our Beavertown Collab is barrel-aged, but we don’t know for how long until its ready!",
+        "image_url": "https://images.punkapi.com/v2/227.png",
+        "alcohol_by_volume": "9.2",
+        "food_pairing": [
+          "Ancho pulled beef chilli",
+          "Aged cheddar, chickpea \u0026 roasted vegetable tagine"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "76", "type": "ingredients" },
+            { "id": "77", "type": "ingredients" },
+            { "id": "78", "type": "ingredients" },
+            { "id": "79", "type": "ingredients" },
+            { "id": "80", "type": "ingredients" },
+            { "id": "81", "type": "ingredients" },
+            { "id": "82", "type": "ingredients" },
+            { "id": "83", "type": "ingredients" },
+            { "id": "84", "type": "ingredients" },
+            { "id": "85", "type": "ingredients" },
+            { "id": "86", "type": "ingredients" },
+            { "id": "87", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "12",
+      "type": "beers",
+      "attributes": {
+        "name": "Prototype Helles",
+        "tagline": "Laid-Back Bavarian Classic.",
+        "description": "Our spin on one-of the most popular beer styles ever conceived. A celebration of light, bready malt, with toasty hints and soft bitterness.",
+        "image_url": "https://images.punkapi.com/v2/keg.png",
+        "alcohol_by_volume": "4.9",
+        "food_pairing": [
+          "Salt beef bagel with mustard \u0026 pickles",
+          "Pork belly ramen",
+          "Beetroot and goats cheese salad"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "88", "type": "ingredients" },
+            { "id": "89", "type": "ingredients" },
+            { "id": "90", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "13",
+      "type": "beers",
+      "attributes": {
+        "name": "Rye Hammer",
+        "tagline": "Our Ruthless IPA with A Spicy Twist.",
+        "description": "Rye Hammer is the fourth of our super-charged hyped up hybrids. A bready beery beast. Rye grains and American hops unite in an agricultural superpower. Aroma of roasted malts, rye bread and subtle floral hops. Grapefruit, roasted caramel with malty fruity notes, followed by the bitterest of bitter finishes. Rye Hammer – liquid daily bread.",
+        "image_url": "https://images.punkapi.com/v2/229.png",
+        "alcohol_by_volume": "7.2",
+        "food_pairing": ["Smoked salmon tostada", "Schäufele", "Rye apple cake"]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "91", "type": "ingredients" },
+            { "id": "92", "type": "ingredients" },
+            { "id": "94", "type": "ingredients" },
+            { "id": "93", "type": "ingredients" },
+            { "id": "95", "type": "ingredients" },
+            { "id": "96", "type": "ingredients" },
+            { "id": "97", "type": "ingredients" },
+            { "id": "98", "type": "ingredients" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "14",
+      "type": "beers",
+      "attributes": {
+        "name": "Black Hammer",
+        "tagline": "Our Ruthless IPA With A Dark Malt Twist.",
+        "description": "Jack Hammer has been single handedly ripping it up for quite some time. Now, the definitive bitter and twisted IPA, has spawned four Hammer Head off-springs. Black Hammer is the second of our hyped up hybrid IPAs. A black hearted beast, that takes no prisoners. American hops and dark malt combine to make mischief. Grapefruit and coffee collide in sensory overload – a wake-up call for other IPA’s. Molten waves of pithy grapefruit build and finally ebb to the roasty bitter onslaught. Stand  firm and wield the Black Hammer with care. Stare into the black abyss and succumb to the dark-side.",
+        "image_url": "https://images.punkapi.com/v2/230.png",
+        "alcohol_by_volume": "7.2",
+        "food_pairing": [
+          "Buffalo wings with blue cheese dip",
+          "Spinach and feta tacos",
+          "Triple chocolate chip cookies"
+        ]
+      },
+      "relationships": {
+        "ingredients": {
+          "data": [
+            { "id": "99", "type": "ingredients" },
+            { "id": "100", "type": "ingredients" },
+            { "id": "102", "type": "ingredients" },
+            { "id": "101", "type": "ingredients" },
+            { "id": "103", "type": "ingredients" },
+            { "id": "104", "type": "ingredients" },
+            { "id": "105", "type": "ingredients" },
+            { "id": "106", "type": "ingredients" }
+          ]
+        }
+      }
+    }
+  ]
+}

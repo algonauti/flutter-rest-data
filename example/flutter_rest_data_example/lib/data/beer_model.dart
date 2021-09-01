@@ -16,7 +16,6 @@ class BeerModel extends JsonApiModel {
 
   List<String> get foodPairing => attributes!['food_pairing'];
 
-  List<IngredientModel> get ingredients => includedDocs("ingredients")
-      .map((jsonDoc) => IngredientModel(jsonDoc))
-      .toList();
+  Iterable<IngredientModel> get ingredients =>
+      includedDocs("ingredients").map((jsonDoc) => IngredientModel(jsonDoc));
 }
