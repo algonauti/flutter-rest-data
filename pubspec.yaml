@@ -9,7 +9,9 @@ environment:
 
 dependencies:
   hive_flutter: ^1.1.0
-  rest_data: ^1.0.0
+  rest_data:
+    git:
+      url: https://github.com/algonauti/dart-rest-data
   flutter:
     sdk: flutter
 
