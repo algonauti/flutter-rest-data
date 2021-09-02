@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rest_data/flutter_rest_data.dart';
 import 'package:flutter_rest_data_example/data/beer_api_service.dart';
+import 'package:flutter_rest_data_example/ui/beers_list_page.dart';
+import 'package:flutter_rest_data_example/ui/error_presenter.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -13,8 +15,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   bool _isOffline = false;
   bool _isLoading = false;
-
-  Exception? _lastLoadingError;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +40,6 @@ class _LoadingPageState extends State<LoadingPage> {
           SizedBox(
             height: 24,
           ),
-          if (_lastLoadingError != null && !_isLoading)
-            _buildError(_lastLoadingError!)
         ],
       ),
     );
@@ -111,10 +109,17 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future<void> _safelyLoadBeers(BuildContext context) async {
     try {
-      await _apiService.loadBeerList();
-      _lastLoadingError = null;
+      final beers = await _apiService.loadBeerList();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BeerListPage(
+                  beerList: beers.toList(),
+                )),
+      );
     } on Exception catch (e) {
-      _lastLoadingError = e;
+      ErrorPresenter.showError(context, error: e);
     }
   }
 }
