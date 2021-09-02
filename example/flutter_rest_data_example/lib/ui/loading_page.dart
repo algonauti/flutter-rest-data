@@ -4,6 +4,7 @@ import 'package:flutter_rest_data/flutter_rest_data.dart';
 import 'package:flutter_rest_data_example/data/beer_api_service.dart';
 import 'package:flutter_rest_data_example/ui/beers_list_page.dart';
 import 'package:flutter_rest_data_example/ui/error_presenter.dart';
+import 'package:flutter_rest_data_example/ui/global_strings.dart';
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Beers API Client"),
+        title: Text(APPBAR_TITLE),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
