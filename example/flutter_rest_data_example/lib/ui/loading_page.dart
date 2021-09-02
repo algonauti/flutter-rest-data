@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rest_data/flutter_rest_data.dart';
 import 'package:flutter_rest_data_example/data/beer_api_service.dart';
 import 'package:flutter_rest_data_example/ui/beers_list_page.dart';
 import 'package:flutter_rest_data_example/ui/error_presenter.dart';
@@ -62,31 +61,6 @@ class _LoadingPageState extends State<LoadingPage> {
               ),
             ),
     );
-  }
-
-  Widget _buildError(Exception e) {
-    return Container(
-      color: Colors.red,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_getHumanReadableErrorDescription(e)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getHumanReadableErrorDescription(Exception e) {
-    if (e is NoNetworkError) {
-      return 'Network is not available';
-    } else if (e is NetworkError) {
-      return 'Error while trying to access the server';
-    }
-
-    return 'Unexpected error';
   }
 
   void _toggleOffline(bool shouldWorkOffline) {

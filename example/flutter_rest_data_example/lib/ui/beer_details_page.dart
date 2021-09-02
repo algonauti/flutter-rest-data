@@ -129,10 +129,6 @@ class _BeerDetailsPageState extends State<BeerDetailsPage> {
     }
 
     final textTheme = Theme.of(context).textTheme;
-    final regularTextStyle = TextStyle(
-      fontSize: 14.0,
-      color: Colors.black,
-    );
 
     return [
       Text(
