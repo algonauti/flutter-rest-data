@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rest_data_example/data/beer_api_service.dart';
-import 'package:flutter_rest_data_example/data/beer_model.dart';
-import 'package:flutter_rest_data_example/data/ingredient_model.dart';
+import 'package:flutter_rest_data_example/services/beer_api.dart';
+import 'package:flutter_rest_data_example/models/beer.dart';
+import 'package:flutter_rest_data_example/models/ingredient.dart';
 import 'package:flutter_rest_data_example/ui/error_presenter.dart';
-import 'package:flutter_rest_data_example/ui/global_strings.dart';
 
 class BeerDetailsPage extends StatefulWidget {
   final String _beerId;
@@ -37,7 +36,7 @@ class _BeerDetailsPageState extends State<BeerDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(APPBAR_TITLE),
+        title: Text('Beers API Client'),
       ),
       body: _isLoading
           ? _buildLoadingProgress()

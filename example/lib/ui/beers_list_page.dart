@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rest_data_example/data/beer_model.dart';
+import 'package:flutter_rest_data_example/models/beer.dart';
 import 'package:flutter_rest_data_example/ui/beer_details_page.dart';
-import 'package:flutter_rest_data_example/ui/global_strings.dart';
 
 class BeerListPage extends StatefulWidget {
   final List<BeerModel> _beerList;
@@ -22,7 +21,7 @@ class _BeerListPageState extends State<BeerListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(APPBAR_TITLE),
+        title: Text('Beers API Client'),
       ),
       body: ListView.builder(
           itemCount: widget._beerList.length,

@@ -1,5 +1,5 @@
 import 'package:flutter_rest_data/flutter_rest_data.dart';
-import 'package:flutter_rest_data_example/data/beer_model.dart';
+import 'package:flutter_rest_data_example/models/beer.dart';
 
 class BeerApiService {
   static const String _SERVICE_URL = 'peaceful-hamlet-37069.herokuapp.com';

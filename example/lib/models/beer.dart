@@ -1,5 +1,5 @@
 import 'package:flutter_rest_data/flutter_rest_data.dart';
-import 'package:flutter_rest_data_example/data/ingredient_model.dart';
+import 'package:flutter_rest_data_example/models/ingredient.dart';
 
 class BeerModel extends JsonApiModel {
   BeerModel(JsonApiDocument jsonApiDoc) : super(jsonApiDoc);
@@ -17,5 +17,5 @@ class BeerModel extends JsonApiModel {
   List<String> get foodPairing => attributes['food_pairing'].cast<String>();
 
   Iterable<IngredientModel> get ingredients =>
-      includedDocs("ingredients").map((jsonDoc) => IngredientModel(jsonDoc));
+      includedDocs('ingredients').map((jsonDoc) => IngredientModel(jsonDoc));
 }
