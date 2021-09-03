@@ -4,12 +4,12 @@ import 'package:flutter_rest_data_example/models/beer.dart';
 import 'package:flutter_rest_data_example/ui/beer_details_page.dart';
 
 class BeerListPage extends StatefulWidget {
-  final List<BeerModel> _beerList;
+  final List<Beer> _beers;
 
   BeerListPage({
     Key? key,
-    required List<BeerModel> beerList,
-  })  : _beerList = beerList,
+    required ManyBeers beers,
+  })  : _beers = beers.toList(),
         super(key: key);
 
   @override
@@ -24,14 +24,14 @@ class _BeerListPageState extends State<BeerListPage> {
         title: Text('Beers API Client'),
       ),
       body: ListView.builder(
-          itemCount: widget._beerList.length,
+          itemCount: widget._beers.length,
           itemBuilder: (context, index) {
-            return _buildBeerListItem(context, beer: widget._beerList[index]);
+            return _buildBeerListItem(context, beer: widget._beers[index]);
           }),
     );
   }
 
-  Widget _buildBeerListItem(BuildContext context, {required BeerModel beer}) {
+  Widget _buildBeerListItem(BuildContext context, {required Beer beer}) {
     return ListTile(
       title: Text(beer.name),
       subtitle: Text(beer.tagline),

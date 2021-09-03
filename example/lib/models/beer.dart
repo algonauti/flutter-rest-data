@@ -1,8 +1,18 @@
 import 'package:flutter_rest_data/flutter_rest_data.dart';
+import 'package:flutter_rest_data_example/models/base.dart';
 import 'package:flutter_rest_data_example/models/ingredient.dart';
 
-class BeerModel extends JsonApiModel {
-  BeerModel(JsonApiDocument jsonApiDoc) : super(jsonApiDoc);
+class Beer extends BaseModel {
+  Beer(JsonApiDocument jsonApiDoc) : super(jsonApiDoc);
+
+  static final String _endpoint = 'beers';
+
+  static Future<Beer> find(String id, {bool forceReload = false}) async => Beer(
+        await BaseModel.adapter.find(_endpoint, id, forceReload: forceReload),
+      );
+
+  static Future<ManyBeers> findAll() async =>
+      ManyBeers(await BaseModel.adapter.findAll(_endpoint));
 
   String get name => attributes['name'];
 
@@ -18,4 +28,10 @@ class BeerModel extends JsonApiModel {
 
   Iterable<IngredientModel> get ingredients =>
       includedDocs('ingredients').map((jsonDoc) => IngredientModel(jsonDoc));
+}
+
+class ManyBeers extends JsonApiManyModel<Beer> {
+  ManyBeers(JsonApiManyDocument manyDoc) : super(manyDoc) {
+    models = manyDoc.map<Beer>((jsonApiDoc) => Beer(jsonApiDoc!));
+  }
 }

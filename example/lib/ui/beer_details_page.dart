@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rest_data_example/services/beer_api.dart';
 import 'package:flutter_rest_data_example/models/beer.dart';
 import 'package:flutter_rest_data_example/models/ingredient.dart';
 import 'package:flutter_rest_data_example/ui/error_presenter.dart';
@@ -20,10 +19,8 @@ class BeerDetailsPage extends StatefulWidget {
 }
 
 class _BeerDetailsPageState extends State<BeerDetailsPage> {
-  BeerApiService _apiService = BeerApiService();
-
   bool _isLoading = false;
-  BeerModel? _beer;
+  Beer? _beer;
 
   @override
   void initState() {
@@ -52,7 +49,7 @@ class _BeerDetailsPageState extends State<BeerDetailsPage> {
 
   Widget _buildBeerDetails(
     BuildContext context, {
-    required BeerModel? beer,
+    required Beer? beer,
   }) {
     if (beer == null) {
       return Center(
@@ -190,12 +187,9 @@ class _BeerDetailsPageState extends State<BeerDetailsPage> {
     });
   }
 
-  Future<BeerModel?> _safelyLoadBeerDetails(String beerId) async {
+  Future<Beer?> _safelyLoadBeerDetails(String beerId) async {
     try {
-      return await _apiService.loadSingleBeer(
-        beerId: beerId,
-        forceReload: true,
-      );
+      return await Beer.find(beerId, forceReload: true);
     } on Exception catch (e) {
       ErrorPresenter.showError(context, error: e);
       return null;

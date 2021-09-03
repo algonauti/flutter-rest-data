@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rest_data_example/models/beer.dart';
 import 'package:flutter_rest_data_example/services/beer_api.dart';
 import 'package:flutter_rest_data_example/ui/beers_list_page.dart';
 import 'package:flutter_rest_data_example/ui/error_presenter.dart';
@@ -83,14 +84,11 @@ class _LoadingPageState extends State<LoadingPage> {
 
   Future<void> _safelyLoadBeers(BuildContext context) async {
     try {
-      final beers = await _apiService.loadBeerList();
+      final beers = await Beer.findAll();
 
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => BeerListPage(
-                  beerList: beers.toList(),
-                )),
+        MaterialPageRoute(builder: (context) => BeerListPage(beers: beers)),
       );
     } on Exception catch (e) {
       ErrorPresenter.showError(context, error: e);
