@@ -127,8 +127,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     }
   }
 
-  Future<Box<JsonApiDocument?>> openBox(String name) =>
-      Hive.openBox<JsonApiDocument?>(name);
+  Future<Box<JsonApiDocument>> openBox(String name) =>
+      Hive.openBox<JsonApiDocument>(name);
 
   Future<JsonApiDocument> boxGetOne(String endpoint, String id) async {
     var box = await openBox(endpoint);
@@ -181,7 +181,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var box = await openBox('added');
     List<JsonApiDocument> docs = [];
     box.values.forEach((doc) {
-      if (doc != null && doc.endpoint == endpoint) {
+      if (doc.endpoint == endpoint) {
         docs.add(doc);
       }
     });
@@ -196,12 +196,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   Future<JsonApiManyDocument> findAllPersisted(String endpoint) async {
     var box = await openBox(endpoint);
-    List<JsonApiDocument> docs = [];
-    box.values.forEach((doc) {
-      if (doc != null) {
-        docs.add(doc);
-      }
-    });
+    List<JsonApiDocument> docs = box.values.toList();
     docs.addAll(await addedByEndpoint(endpoint));
     return JsonApiManyDocument(docs);
   }
