@@ -3,11 +3,11 @@ import 'package:flutter_rest_data/flutter_rest_data.dart';
 class IngredientModel extends JsonApiModel {
   IngredientModel(JsonApiDocument jsonApiDoc) : super(jsonApiDoc);
 
-  String get kind => attributes['kind'];
+  String get kind => getAttribute<String>('kind');
 
-  String get name => attributes['name'];
+  String get name => getAttribute<String>('name');
 
-  String get quantity => attributes['qty'];
+  String get quantity => getAttribute<String>('qty');
 
-  String get unit => attributes['unit'];
+  String get unit => getAttribute<String>('unit');
 }

@@ -14,17 +14,17 @@ class Beer extends BaseModel {
   static Future<ManyBeers> findAll() async =>
       ManyBeers(await BaseModel.adapter.findAll(_endpoint));
 
-  String get name => attributes['name'];
+  String get name => getAttribute<String>('name');
 
-  String get tagline => attributes['tagline'];
+  String get tagline => getAttribute<String>('tagline');
 
-  String get description => attributes['description'];
+  String get description => getAttribute<String>('description');
 
-  String get imageUrl => attributes['image_url'];
+  String get imageUrl => getAttribute<String>('image_url');
 
-  String get alcoholByVolume => attributes['alcohol_by_volume'];
+  String get alcoholByVolume => getAttribute<String>('alcohol_by_volume');
 
-  List<String> get foodPairing => attributes['food_pairing'].cast<String>();
+  List<String> get foodPairing => getAttribute<List<String>>('food_pairing');
 
   Iterable<IngredientModel> get ingredients =>
       includedDocs('ingredients').map((jsonDoc) => IngredientModel(jsonDoc));
@@ -32,6 +32,6 @@ class Beer extends BaseModel {
 
 class ManyBeers extends JsonApiManyModel<Beer> {
   ManyBeers(JsonApiManyDocument manyDoc) : super(manyDoc) {
-    models = manyDoc.map<Beer>((jsonApiDoc) => Beer(jsonApiDoc!));
+    models = manyDoc.map<Beer>((jsonApiDoc) => Beer(jsonApiDoc));
   }
 }

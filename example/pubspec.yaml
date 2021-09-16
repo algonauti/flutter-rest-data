@@ -14,8 +14,11 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  #TODO go back to relative path here when null safety improvements are merged
   flutter_rest_data:
-    path: ../
+    git:
+      url: git://github.com/algonauti/flutter-rest-data.git
+      ref: null-safety-improvements
 
 dev_dependencies:
   flutter_test:
