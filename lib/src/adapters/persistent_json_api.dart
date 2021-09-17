@@ -144,13 +144,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     Iterable<String> ids,
   ) async {
     var box = await openBox(endpoint);
-    List<JsonApiDocument> docs = [];
-    ids.forEach((id) {
-      JsonApiDocument? doc = box.get(id);
-      if (doc != null) {
-        docs.add(doc);
-      }
-    });
+    List<JsonApiDocument> docs =
+        ids.map((id) => box.get(id)).whereType<JsonApiDocument>().toList();
     if (ids.isNotEmpty && docs.isEmpty) {
       throw LocalRecordNotFoundException();
     }
@@ -179,12 +174,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   Future<Iterable<JsonApiDocument>> addedByEndpoint(String endpoint) async {
     var box = await openBox('added');
-    List<JsonApiDocument> docs = [];
-    box.values.forEach((doc) {
-      if (doc.endpoint == endpoint) {
-        docs.add(doc);
-      }
-    });
+    List<JsonApiDocument> docs =
+        box.values.where((doc) => doc.endpoint == endpoint).toList();
     return docs;
   }
 
