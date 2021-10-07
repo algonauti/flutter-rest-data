@@ -1,11 +1,20 @@
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rest_data/rest_data.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/sembast_io.dart';
+import 'package:sembast/sembast_memory.dart';
+
+import 'package:flutter_rest_data/src/db_adapters/json_api.dart';
 
 import '../exceptions.dart';
-import '../hive_adapters/json_api.dart';
 
 class PersistentJsonApiAdapter extends JsonApiAdapter {
+  JsonApiStoreAdapter _storeAdapter = JsonApiStoreAdapter();
+  late DatabaseFactory _dbFactory;
+  late Database database;
+  late String _dbName;
+
   PersistentJsonApiAdapter(
     String hostname,
     String apiPath, {
@@ -26,38 +35,48 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     isOnline = false;
   }
 
-  Future<void> init() async {
-    await Hive.initFlutter();
-    registerAdapters();
+  Future<void> init({String databaseName = 'persistent_json_api.db'}) async {
+    _dbName = databaseName;
+    _dbFactory = databaseFactoryIo;
+    var dbPath = await _buildDbPath(_dbName);
+    await _openDatabase(dbPath);
   }
 
-  void initTest() {
-    registerAdapters();
+  Future<void> initTest() async {
+    _dbName = 'flutter_rest_data.db';
+    _dbFactory = databaseFactoryMemoryFs;
+    await _openDatabase(_dbName);
   }
 
-  void registerAdapters() {
-    Hive.registerAdapter(JsonApiHiveAdapter());
+  Future<void> _openDatabase(String dbPath) async {
+    database = await _dbFactory.openDatabase(dbPath);
   }
 
-  Future<void> dispose() => Hive.close();
+  Future<String> _buildDbPath(String dbName) async {
+    var dir = await getApplicationDocumentsDirectory();
+    await dir.create(recursive: true);
+    return join(dir.path, dbName);
+  }
 
-  Future<void> dropBoxes() => Hive.deleteFromDisk();
+  Future<void> dispose() => database.close();
+
+  Future<void> dropStores() => _dbFactory.deleteDatabase(_dbName);
 
   // TODO
   //  - when connection gets back:
-  //    - invoke super.save() on each doc in the 'added' box (endpoint can be computed from type)
-  //    - invoke super.delete() on each doc in the 'removed' box (endpoint can be computed from type)
+  //    - invoke super.save() on each doc in the 'added' store (endpoint can be computed from type)
+  //    - invoke super.delete() on each doc in the 'removed' store (endpoint can be computed from type)
 
   @override
   Future<JsonApiDocument> fetch(String endpoint, String id) async {
     JsonApiDocument? doc;
     if (isOnline) {
       doc = await super.fetch(endpoint, id);
-      await boxPutOne(endpoint, doc);
+      await storePutOne(endpoint, doc);
     } else {
       doc = id.contains('added')
           ? (await findAdded(id))
-          : (await boxGetOne(endpoint, id));
+          : (await storeGetOne(endpoint, id));
     }
     return doc!;
   }
@@ -67,7 +86,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     JsonApiManyDocument docs;
     if (isOnline) {
       docs = await super.findAll(endpoint);
-      await boxPutMany(endpoint, docs);
+      await storePutMany(endpoint, docs);
     } else {
       docs = await findAllPersisted(endpoint);
       cacheMany(endpoint, docs);
@@ -81,11 +100,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     JsonApiManyDocument docs;
     if (isOnline) {
       docs = await super.query(endpoint, params);
-      await boxPutMany(endpoint, docs);
+      await storePutMany(endpoint, docs);
     } else {
       if (params.containsKey('filter[id]')) {
         List<String> ids = params['filter[id]']!.split(',');
-        docs = await boxGetMany(endpoint, ids);
+        docs = await storeGetMany(endpoint, ids);
       } else {
         docs = await findAllPersisted(endpoint);
         if (filter != null) {
@@ -105,11 +124,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     JsonApiDocument doc;
     if (isOnline) {
       doc = await super.save(endpoint, document);
-      await boxPutOne(endpoint, doc);
+      await storePutOne(endpoint, doc);
     } else {
       // TODO Handle Update case
       doc = document;
-      int id = await boxAdd(endpoint, doc);
+      int id = await storeAdd(endpoint, doc);
       doc.id = 'added:$id';
       cache(endpoint, doc);
     }
@@ -121,74 +140,95 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     if (isOnline) {
       return super.performDelete(endpoint, doc);
     } else {
-      var removedBox = await openBox('removed');
-      await removedBox.put('$endpoint:${doc.id}', doc);
-      (await openBox(endpoint)).delete(doc.id);
+      var removedStore = openStringKeyStore('removed');
+      await removedStore
+          .record('$endpoint:${doc.id}')
+          .put(database, _storeAdapter.toMap(doc));
+      await openStringKeyStore(endpoint).record(doc.id!).delete(database);
     }
   }
 
-  Future<Box<JsonApiDocument>> openBox(String name) =>
-      Hive.openBox<JsonApiDocument>(name);
+  Future<JsonApiDocument> storeGetOne(String endpoint, String id) async {
+    var store = openStringKeyStore(endpoint);
 
-  Future<JsonApiDocument> boxGetOne(String endpoint, String id) async {
-    var box = await openBox(endpoint);
-    var doc = box.get(id);
+    var doc = await store.record(id).get(database);
+
     if (doc == null) {
       throw LocalRecordNotFoundException();
     }
-    return doc;
+    return _storeAdapter.fromMap(doc);
   }
 
-  Future<JsonApiManyDocument> boxGetMany(
+  Future<JsonApiManyDocument> storeGetMany(
     String endpoint,
     Iterable<String> ids,
   ) async {
-    var box = await openBox(endpoint);
-    List<JsonApiDocument> docs =
-        ids.map((id) => box.get(id)).whereType<JsonApiDocument>().toList();
+    var store = openStringKeyStore(endpoint);
+
+    var docs = await store.records(ids).get(database).then(
+          (maps) => maps
+              .where((doc) => doc != null)
+              .map((doc) => _storeAdapter.fromMap(doc!)),
+        );
+
     if (ids.isNotEmpty && docs.isEmpty) {
       throw LocalRecordNotFoundException();
     }
     return JsonApiManyDocument(docs);
   }
 
-  Future<void> boxPutOne(String endpoint, JsonApiDocument doc) async {
-    var box = await openBox(endpoint);
-    await box.put(doc.id, doc);
+  Future<void> storePutOne(String endpoint, JsonApiDocument doc) async {
+    var store = openStringKeyStore(endpoint);
+
+    await store.record(doc.id!).put(database, _storeAdapter.toMap(doc));
   }
 
-  Future<void> boxPutMany(String endpoint, JsonApiManyDocument docs) async {
-    var box = await openBox(endpoint);
-    var puts = <Future>[];
-    docs.forEach((doc) {
-      puts.add(box.put(doc.id, doc));
+  Future<void> storePutMany(String endpoint, JsonApiManyDocument docs) async {
+    var store = openStringKeyStore(endpoint);
+
+    await database.transaction((transaction) async {
+      for (var doc in docs) {
+        await store.record(doc.id!).put(transaction, _storeAdapter.toMap(doc));
+      }
     });
-    await Future.wait(puts);
   }
 
-  Future<int> boxAdd(String endpoint, JsonApiDocument doc) async {
-    var box = await openBox('added');
-    int id = await box.add(doc);
+  Future<int> storeAdd(String endpoint, JsonApiDocument doc) async {
+    var store = openIntKeyStore('added');
+    int id = await store.add(database, _storeAdapter.toMap(doc));
     return id;
   }
 
   Future<Iterable<JsonApiDocument>> addedByEndpoint(String endpoint) async {
-    var box = await openBox('added');
-    List<JsonApiDocument> docs =
-        box.values.where((doc) => doc.endpoint == endpoint).toList();
-    return docs;
+    var store = openIntKeyStore('added');
+    var docs = await store.find(
+      database,
+      finder: Finder(filter: Filter.matches('endpoint', endpoint)),
+    );
+    return docs.map((e) => _storeAdapter.fromMap(e.value)).toList();
   }
 
   Future<JsonApiDocument?> findAdded(String id) async {
     var key = int.parse(id.replaceAll('added:', ''));
-    var box = await openBox('added');
-    return box.get(key);
+    var store = openIntKeyStore('added');
+    var map = await store.record(key).get(database);
+    return map == null ? null : _storeAdapter.fromMap(map);
   }
 
   Future<JsonApiManyDocument> findAllPersisted(String endpoint) async {
-    var box = await openBox(endpoint);
-    List<JsonApiDocument> docs = box.values.toList();
+    var store = openStringKeyStore(endpoint);
+    final docs = (await store.find(database, finder: Finder()))
+        .map((e) => _storeAdapter.fromMap(e.value))
+        .toList();
     docs.addAll(await addedByEndpoint(endpoint));
     return JsonApiManyDocument(docs);
+  }
+
+  StoreRef<String, Map<String, Object?>> openStringKeyStore(String name) {
+    return stringMapStoreFactory.store(name);
+  }
+
+  StoreRef<int, Map<String, Object?>> openIntKeyStore(String name) {
+    return intMapStoreFactory.store(name);
   }
 }

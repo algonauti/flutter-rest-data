@@ -1,6 +1,6 @@
 # flutter_rest_data
 
-This package is built on top of [rest_data](https://github.com/algonauti/dart-rest-data). It uses [hive](https://github.com/hivedb/hive) to store on local device all data coming from your REST backend.
+This package is built on top of [rest_data](https://github.com/algonauti/dart-rest-data). It uses [sembast](https://github.com/tekartik/sembast.dart) to store on local device all data coming from your REST backend.
 
 [![CI](https://github.com/algonauti/flutter-rest-data/workflows/CI/badge.svg)](https://github.com/algonauti/flutter-rest-data/actions)
 
