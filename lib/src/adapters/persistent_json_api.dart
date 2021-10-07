@@ -127,8 +127,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     }
   }
 
-  Future<Box<JsonApiDocument?>> openBox(String name) =>
-      Hive.openBox<JsonApiDocument?>(name);
+  Future<Box<JsonApiDocument>> openBox(String name) =>
+      Hive.openBox<JsonApiDocument>(name);
 
   Future<JsonApiDocument> boxGetOne(String endpoint, String id) async {
     var box = await openBox(endpoint);
@@ -144,8 +144,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     Iterable<String> ids,
   ) async {
     var box = await openBox(endpoint);
-    var docs =
-        ids.map((id) => box.get(id)).where((doc) => doc != null).toList();
+    List<JsonApiDocument> docs =
+        ids.map((id) => box.get(id)).whereType<JsonApiDocument>().toList();
     if (ids.isNotEmpty && docs.isEmpty) {
       throw LocalRecordNotFoundException();
     }
@@ -161,7 +161,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var box = await openBox(endpoint);
     var puts = <Future>[];
     docs.forEach((doc) {
-      puts.add(box.put(doc!.id, doc));
+      puts.add(box.put(doc.id, doc));
     });
     await Future.wait(puts);
   }
@@ -172,9 +172,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     return id;
   }
 
-  Future<Iterable<JsonApiDocument?>> addedByEndpoint(String endpoint) async {
+  Future<Iterable<JsonApiDocument>> addedByEndpoint(String endpoint) async {
     var box = await openBox('added');
-    return box.values.where((doc) => doc!.endpoint == endpoint);
+    List<JsonApiDocument> docs =
+        box.values.where((doc) => doc.endpoint == endpoint).toList();
+    return docs;
   }
 
   Future<JsonApiDocument?> findAdded(String id) async {
@@ -185,7 +187,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   Future<JsonApiManyDocument> findAllPersisted(String endpoint) async {
     var box = await openBox(endpoint);
-    var docs = box.values.toList();
+    List<JsonApiDocument> docs = box.values.toList();
     docs.addAll(await addedByEndpoint(endpoint));
     return JsonApiManyDocument(docs);
   }

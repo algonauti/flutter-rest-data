@@ -5,13 +5,11 @@ homepage: https://www.algonauti.com
 publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   hive_flutter: ^1.1.0
-  rest_data:
-    git:
-      url: https://github.com/algonauti/dart-rest-data
+  rest_data: ^1.1.0
   flutter:
     sdk: flutter
 
