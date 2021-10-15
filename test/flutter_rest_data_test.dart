@@ -1,22 +1,23 @@
 import 'package:flutter_rest_data/flutter_rest_data.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'helpers.dart';
+import 'package:collection/collection.dart';
+import 'package:sembast/sembast.dart' as sembast;
 
 void main() {
   group('PersistentJsonApiAdapter', () {
     late PersistentJsonApiAdapter adapter;
 
-    setUpAll(() {
-      initHive();
-      adapter =
-          PersistentJsonApiAdapter('host.example.com', '/path/to/rest/api');
-      adapter.registerAdapters();
-    });
+    before() async {
+      adapter = PersistentJsonApiAdapter(
+        'host.example.com',
+        '/path/to/rest/api',
+      );
+      await adapter.initTest();
+    }
 
-    tearDownAll(() async {
-      await adapter.dropBoxes();
-    });
+    after() async {
+      await adapter.dropStores();
+    }
 
     group('when offline', () {
       JsonApiDocument doc1 = createJsonApiDocument('1');
@@ -24,20 +25,30 @@ void main() {
       JsonApiDocument doc3 = createJsonApiDocument('3');
       JsonApiManyDocument docs = JsonApiManyDocument([doc1, doc2, doc3]);
 
+      setUp(before);
+      tearDown(after);
+
       setUp(() async {
         adapter.setOffline();
-        await adapter.boxPutMany('docs', docs);
+        await adapter.storePutMany('docs', docs);
       });
 
-      test('find() returns requested JsonApiDocument from Hive', () async {
+      test('find() returns requested JsonApiDocument from database', () async {
         var doc = await adapter.find('docs', '1');
         expect(doc is JsonApiDocument, isTrue);
         expect(doc.id, '1');
-        expect(doc.attributes == doc1.attributes, isTrue);
-        expect(doc.relationships == doc1.relationships, isTrue);
+        expect(
+          DeepCollectionEquality().equals(doc.attributes, doc1.attributes),
+          isTrue,
+        );
+        expect(
+          DeepCollectionEquality()
+              .equals(doc.relationships, doc1.relationships),
+          isTrue,
+        );
       });
 
-      test('findMany() returns requested JsonApiDocument objects from Hive',
+      test('findMany() returns requested JsonApiDocument objects from database',
           () async {
         var requestedIds = ['1', '2'];
         var returnedDocs = await adapter.findMany('docs', requestedIds);
@@ -48,7 +59,8 @@ void main() {
         expect(requestedIds.toSet().containsAll(returnedIds), isTrue);
       });
 
-      test('findAll() returns all JsonApiDocument objects from Hive', () async {
+      test('findAll() returns all JsonApiDocument objects from database',
+          () async {
         var allIds = ['1', '2', '3'];
         var returnedDocs = await adapter.findAll('docs');
         expect(returnedDocs is JsonApiManyDocument, isTrue);
@@ -56,6 +68,17 @@ void main() {
         var returnedIds = returnedDocs.map((doc) => doc.id);
         expect(returnedIds.toSet().containsAll(allIds), isTrue);
         expect(allIds.toSet().containsAll(returnedIds), isTrue);
+      });
+
+      test('performDelete() moves document to "removed" store', () async {
+        await adapter.performDelete('docs', doc1);
+        var remaining = await adapter.findAll('docs');
+        expect(remaining.length, docs.length - 1);
+
+        var removed = await adapter
+            .openStringKeyStore('removed')
+            .find(adapter.database, finder: sembast.Finder());
+        expect(removed.length, 1);
       });
     });
   });
