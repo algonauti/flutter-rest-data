@@ -50,7 +50,7 @@ class _LoadingPageState extends State<LoadingPage> {
       onPressed: _isLoading ? null : () => _loadBeers(context),
       minWidth: 120,
       height: 48,
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       child: _isLoading
           ? CircularProgressIndicator()
           : Text(
