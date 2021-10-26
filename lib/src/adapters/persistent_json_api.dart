@@ -194,8 +194,11 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
   }
 
   Future<int> storeAdd(String endpoint, JsonApiDocument doc) async {
+    var rawValue = _storeAdapter.toMap(doc);
+    rawValue['__endpoint__'] = endpoint;
+
     var store = openIntKeyStore('added');
-    int id = await store.add(database, _storeAdapter.toMap(doc));
+    int id = await store.add(database, rawValue);
     return id;
   }
 
@@ -203,9 +206,10 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var store = openIntKeyStore('added');
     var docs = await store.find(
       database,
-      finder: Finder(filter: Filter.matches('endpoint', endpoint)),
+      finder: Finder(filter: Filter.equals('__endpoint__', endpoint)),
     );
-    return docs.map((e) => _storeAdapter.fromMap(e.value)).toList();
+    var list = docs.map((e) => _storeAdapter.fromMap(e.value)).toList();
+    return list;
   }
 
   Future<JsonApiDocument?> findAdded(String id) async {

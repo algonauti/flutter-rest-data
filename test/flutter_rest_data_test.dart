@@ -80,6 +80,18 @@ void main() {
             .find(adapter.database, finder: sembast.Finder());
         expect(removed.length, 1);
       });
+
+      test('save() places new document to "added" store', () async {
+        final newDoc = createJsonApiDocument('4');
+        await adapter.save('docs', newDoc);
+        var remaining = await adapter.findAll('docs');
+        expect(remaining.length, docs.length + 1);
+
+        var added = await adapter
+            .openIntKeyStore('added')
+            .find(adapter.database, finder: sembast.Finder());
+        expect(added.length, 1);
+      });
     });
   });
 }
