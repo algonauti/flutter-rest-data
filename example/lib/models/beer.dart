@@ -22,7 +22,8 @@ class Beer extends BaseModel {
 
   String get imageUrl => getAttribute<String>('image_url');
 
-  String get alcoholByVolume => getAttribute<String>('alcohol_by_volume');
+  double get alcoholByVolume =>
+      double.parse(getAttribute<String>('alcohol_by_volume'));
 
   List<String> get foodPairing => getAttribute<List<String>>('food_pairing');
 

@@ -7,7 +7,7 @@ class IngredientModel extends JsonApiModel {
 
   String get name => getAttribute<String>('name');
 
-  String get quantity => getAttribute<String>('qty');
+  double get quantity => double.parse(getAttribute<String>('qty'));
 
   String get unit => getAttribute<String>('unit');
 }
