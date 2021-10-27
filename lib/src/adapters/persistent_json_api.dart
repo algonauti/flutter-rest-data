@@ -6,6 +6,7 @@ import 'package:sembast/sembast_io.dart';
 import 'package:sembast/sembast_memory.dart';
 
 import 'package:flutter_rest_data/src/db_adapters/json_api.dart';
+import 'package:uuid/uuid.dart';
 
 import '../exceptions.dart';
 
@@ -74,11 +75,9 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
       doc = await super.fetch(endpoint, id);
       await storePutOne(endpoint, doc);
     } else {
-      doc = id.contains('added')
-          ? (await findAdded(id))
-          : (await storeGetOne(endpoint, id));
+      doc = await storeGetOne(endpoint, id);
     }
-    return doc!;
+    return doc;
   }
 
   @override
@@ -126,13 +125,23 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
       doc = await super.save(endpoint, document);
       await storePutOne(endpoint, doc);
     } else {
-      // TODO Handle Update case
-      doc = document;
-      int id = await storeAdd(endpoint, doc);
-      doc.id = 'added:$id';
-      cache(endpoint, doc);
+      doc = await _persistWhileOffline(endpoint, document);
     }
     return doc;
+  }
+
+  Future<JsonApiDocument> _persistWhileOffline(
+      String endpoint, JsonApiDocument document) async {
+    final isAdding =
+        document.id == null || await findAdded(document.id!) != null;
+    if (isAdding) {
+      final id = await storeAdd(endpoint, document);
+      document.id = id;
+    } else {
+      await storeUpdate(endpoint, document);
+    }
+    cache(endpoint, document);
+    return document;
   }
 
   @override
@@ -140,10 +149,13 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     if (isOnline) {
       return super.performDelete(endpoint, doc);
     } else {
-      var removedStore = openStringKeyStore('removed');
-      await removedStore
-          .record('$endpoint:${doc.id}')
-          .put(database, _storeAdapter.toMap(doc));
+      var addedStore = openAddedStore();
+      var addedRecord = addedStore.record(doc.id!);
+      if (await addedRecord.exists(database)) {
+        await addedRecord.delete(database);
+        return;
+      }
+      await storeDelete(endpoint, doc);
       await openStringKeyStore(endpoint).record(doc.id!).delete(database);
     }
   }
@@ -193,30 +205,55 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     });
   }
 
-  Future<int> storeAdd(String endpoint, JsonApiDocument doc) async {
-    var rawValue = _storeAdapter.toMap(doc);
-    rawValue['__endpoint__'] = endpoint;
+  Future<String> storeAdd(String endpoint, JsonApiDocument doc) async {
+    final tempId = doc.id ?? Uuid().v1();
+    doc.id = tempId;
+    storePutOne(endpoint, doc);
 
-    var store = openIntKeyStore('added');
-    int id = await store.add(database, rawValue);
-    return id;
+    var store = openAddedStore();
+    await store.record(tempId).delete(database);
+    await store.record(tempId).add(database, {'endpoint': endpoint});
+    return tempId;
+  }
+
+  Future<void> storeUpdate(String endpoint, JsonApiDocument doc) async {
+    storePutOne(endpoint, doc);
+
+    var store = openUpdatedStore();
+    await store.record(doc.id!).delete(database);
+    await store.record(doc.id!).add(database, {'endpoint': endpoint});
+  }
+
+  Future<void> storeDelete(String endpoint, JsonApiDocument doc) async {
+    storePutOne(endpoint, doc);
+
+    var store = openRemovedStore();
+    await store.record(doc.id!).delete(database);
+    await store.record(doc.id!).add(database, {'endpoint': endpoint});
   }
 
   Future<Iterable<JsonApiDocument>> addedByEndpoint(String endpoint) async {
-    var store = openIntKeyStore('added');
-    var docs = await store.find(
+    var addedStore = openAddedStore();
+
+    var addedIds = (await addedStore.findKeys(
       database,
-      finder: Finder(filter: Filter.equals('__endpoint__', endpoint)),
-    );
-    var list = docs.map((e) => _storeAdapter.fromMap(e.value)).toList();
+      finder: Finder(filter: Filter.equals('endpoint', endpoint)),
+    ));
+
+    var store = openStringKeyStore(endpoint);
+    var list = (await store.records(addedIds).get(database))
+        .where((e) => e != null)
+        .map((e) => _storeAdapter.fromMap(e!))
+        .toList();
+
     return list;
   }
 
   Future<JsonApiDocument?> findAdded(String id) async {
-    var key = int.parse(id.replaceAll('added:', ''));
-    var store = openIntKeyStore('added');
-    var map = await store.record(key).get(database);
-    return map == null ? null : _storeAdapter.fromMap(map);
+    var store = openAddedStore();
+    var added = await store.record(id).get(database);
+    if (added == null) return null;
+    return peek(added['endpoint'].toString(), id);
   }
 
   Future<JsonApiManyDocument> findAllPersisted(String endpoint) async {
@@ -224,15 +261,19 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     final docs = (await store.find(database, finder: Finder()))
         .map((e) => _storeAdapter.fromMap(e.value))
         .toList();
-    docs.addAll(await addedByEndpoint(endpoint));
     return JsonApiManyDocument(docs);
   }
 
+  StoreRef<String, Map<String, Object?>> openAddedStore() =>
+      openStringKeyStore('added');
+
+  StoreRef<String, Map<String, Object?>> openRemovedStore() =>
+      openStringKeyStore('removed');
+
+  StoreRef<String, Map<String, Object?>> openUpdatedStore() =>
+      openStringKeyStore('updated');
+
   StoreRef<String, Map<String, Object?>> openStringKeyStore(String name) {
     return stringMapStoreFactory.store(name);
-  }
-
-  StoreRef<int, Map<String, Object?>> openIntKeyStore(String name) {
-    return intMapStoreFactory.store(name);
   }
 }

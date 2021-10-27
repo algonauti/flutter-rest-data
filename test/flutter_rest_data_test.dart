@@ -70,25 +70,68 @@ void main() {
         expect(allIds.toSet().containsAll(returnedIds), isTrue);
       });
 
-      test('performDelete() moves document to "removed" store', () async {
+      test(
+          'performDelete() places document id to "removed" store and removed document from store',
+          () async {
         await adapter.performDelete('docs', doc1);
         var remaining = await adapter.findAll('docs');
         expect(remaining.length, docs.length - 1);
 
         var removed = await adapter
-            .openStringKeyStore('removed')
+            .openRemovedStore()
             .find(adapter.database, finder: sembast.Finder());
         expect(removed.length, 1);
       });
 
-      test('save() places new document to "added" store', () async {
-        final newDoc = createJsonApiDocument('4');
-        await adapter.save('docs', newDoc);
+      test('save() places new document id to "added" store', () async {
+        var newDoc = createJsonApiDocument(null);
+        newDoc = await adapter.save('docs', newDoc);
         var remaining = await adapter.findAll('docs');
         expect(remaining.length, docs.length + 1);
 
+        var addedStore = adapter.openAddedStore();
+        var added = await addedStore.find(adapter.database);
+        expect(added.length, 1);
+
+        // second save should not duplicate data
+        newDoc.setAttribute('attribute_one', 'another_value');
+        newDoc = await adapter.save('docs', newDoc);
+
+        remaining = await adapter.findAll('docs');
+        expect(remaining.length, docs.length + 1);
+
+        added = await addedStore.find(adapter.database);
+        expect(added.length, 1);
+      });
+
+      test('save() places new document ids in correct order', () async {
+        var newDoc1 = createJsonApiDocument(null);
+        var newDoc2 = createJsonApiDocument(null);
+        var newDoc3 = createJsonApiDocument(null);
+        newDoc1 = await adapter.save('docs', newDoc1);
+        newDoc2 = await adapter.save('docs', newDoc2);
+        newDoc3 = await adapter.save('docs', newDoc3);
+        var remaining = await adapter.findAll('docs');
+        expect(remaining.length, docs.length + 3);
+
         var added = await adapter
-            .openIntKeyStore('added')
+            .openAddedStore()
+            .find(adapter.database, finder: sembast.Finder());
+        expect(added.length, 3);
+        expect(added[0].key, newDoc1.id);
+        expect(added[1].key, newDoc2.id);
+        expect(added[2].key, newDoc3.id);
+      });
+
+      test('save() places existing document id to "updated" store', () async {
+        final existingDoc = doc2;
+        existingDoc.setAttribute('attribute_one', 'new_value');
+        await adapter.save('docs', existingDoc);
+        var remaining = await adapter.findAll('docs');
+        expect(remaining.length, docs.length);
+
+        var added = await adapter
+            .openUpdatedStore()
             .find(adapter.database, finder: sembast.Finder());
         expect(added.length, 1);
       });
@@ -96,7 +139,7 @@ void main() {
   });
 }
 
-JsonApiDocument createJsonApiDocument(String id) =>
+JsonApiDocument createJsonApiDocument(String? id) =>
     JsonApiDocument(id, 'model_type_1', {
       'attribute_one': 'value_one',
       'attribute_two': 'value_two',
