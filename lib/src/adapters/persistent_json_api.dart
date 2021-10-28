@@ -30,6 +30,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
 
   void setOnline() {
     isOnline = true;
+    _trySendPersistedRequests();
   }
 
   void setOffline() {
@@ -62,11 +63,6 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
   Future<void> dispose() => database.close();
 
   Future<void> dropStores() => _dbFactory.deleteDatabase(_dbName);
-
-  // TODO
-  //  - when connection gets back:
-  //    - invoke super.save() on each doc in the 'added' store (endpoint can be computed from type)
-  //    - invoke super.delete() on each doc in the 'removed' store (endpoint can be computed from type)
 
   @override
   Future<JsonApiDocument> fetch(String endpoint, String id) async {
@@ -142,6 +138,71 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     }
     cache(endpoint, document);
     return document;
+  }
+
+  Future<void> _trySendPersistedRequests() async {
+    await _trySendPersistedDeleteRequests();
+    await _trySendPersistedAddRequests();
+    await _trySendPersistedUpdateRequests();
+  }
+
+  Future<void> _trySendPersistedDeleteRequests() async {
+    final removedStore = openRemovedStore();
+    final allRemoved = await removedStore.find(database);
+    for (var removed in allRemoved) {
+      final id = removed.key;
+      final endpoint = removed.value['endpoint'].toString();
+      try {
+        await super.performDelete(
+          endpoint,
+          // TODO: only id needed to delete, allow in dart-rest-data
+          JsonApiDocument(id, null, {}, null),
+        );
+        removedStore.record(id).delete(database);
+      } on HttpStatusException catch (_) {
+        // no-op
+      }
+    }
+  }
+
+  Future<void> _trySendPersistedUpdateRequests() async {
+    final updatedStore = openUpdatedStore();
+    final allUpdated = await updatedStore.find(database);
+    for (var updated in allUpdated) {
+      final id = updated.key;
+      final endpoint = updated.value['endpoint'].toString();
+      final doc = peek(endpoint, id);
+      final store = openStringKeyStore(endpoint);
+      try {
+        final updatedDoc = await super.save(endpoint, doc!);
+        updatedStore.record(id).delete(database);
+        store.record(doc.id!).update(database, _storeAdapter.toMap(updatedDoc));
+      } on HttpStatusException catch (_) {
+        // no-op
+      }
+    }
+  }
+
+  Future<void> _trySendPersistedAddRequests() async {
+    final addedStore = openAddedStore();
+    final allAdded = await addedStore.find(database);
+    for (var added in allAdded) {
+      final id = added.key;
+      final endpoint = added.value['endpoint'].toString();
+      final store = openStringKeyStore(endpoint);
+      final doc = peek(endpoint, id);
+      doc!.id = null;
+      try {
+        final updatedDoc = await super.save(endpoint, doc);
+        addedStore.record(id).delete(database);
+        store.record(id).delete(database);
+        store
+            .record(updatedDoc.id!)
+            .add(database, _storeAdapter.toMap(updatedDoc));
+      } on HttpStatusException catch (_) {
+        // no-op
+      }
+    }
   }
 
   @override
