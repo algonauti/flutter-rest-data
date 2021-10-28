@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rest_data_example/models/beer.dart';
-import 'package:flutter_rest_data_example/ui/beer_details_page.dart';
+import 'package:flutter_rest_data_example/ui/beers_list.dart';
+import 'package:flutter_rest_data_example/ui/favorite_beers_list_page.dart';
 
 class BeerListPage extends StatefulWidget {
   final List<Beer> _beers;
@@ -22,53 +23,25 @@ class _BeerListPageState extends State<BeerListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Beers API Client'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.star_outline),
+            tooltip: 'Favorite beers',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FavoriteBeerListPage(
+                          beers: widget._beers
+                              .where((beer) => beer.starred)
+                              .toList(),
+                        )),
+              );
+            },
+          ),
+        ],
       ),
-      body: ListView.builder(
-          itemCount: widget._beers.length,
-          itemBuilder: (context, index) {
-            return _buildBeerListItem(context, beer: widget._beers[index]);
-          }),
-    );
-  }
-
-  Widget _buildBeerListItem(BuildContext context, {required Beer beer}) {
-    return ListTile(
-      title: Text(beer.name),
-      subtitle: Text(beer.tagline),
-      leading: Image.network(
-        beer.imageUrl,
-        width: 48,
-        height: 48,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-
-          return SizedBox(
-            width: 48,
-            height: 48,
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          );
-        },
-      ),
-      onTap: () {
-        final beerId = beer.id;
-
-        if (beerId == null) return;
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BeerDetailsPage(
-                    beerId: beerId,
-                  )),
-        );
-      },
+      body: BeersList(widget._beers),
     );
   }
 }

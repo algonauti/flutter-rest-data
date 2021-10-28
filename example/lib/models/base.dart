@@ -5,4 +5,7 @@ class BaseModel extends JsonApiModel {
   BaseModel(JsonApiDocument jsonApiDoc) : super(jsonApiDoc);
 
   static PersistentJsonApiAdapter get adapter => BeerApiService().adapter;
+
+  Future<JsonApiDocument> saveDoc() async =>
+      await adapter.save(endpoint, jsonApiDoc);
 }

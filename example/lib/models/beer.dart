@@ -20,6 +20,10 @@ class Beer extends BaseModel {
 
   String get description => getAttribute<String>('description');
 
+  bool get starred => getAttribute<bool>('is_starred');
+
+  set starred(bool value) => setAttribute('is_starred', value);
+
   String get imageUrl => getAttribute<String>('image_url');
 
   double get alcoholByVolume =>
