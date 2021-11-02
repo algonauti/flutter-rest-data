@@ -56,7 +56,6 @@ class _BeersListState extends State {
           setState(() {
             final beerIndex = _beers.indexOf(beer);
             beer.starred = !beer.starred;
-            beer.saveDoc();
             _beers[beerIndex] = beer;
           });
         },
