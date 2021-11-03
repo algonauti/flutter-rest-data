@@ -171,10 +171,10 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     for (var updated in allUpdated) {
       final id = updated.key;
       final endpoint = updated.value['endpoint'].toString();
-      final doc = peek(endpoint, id);
+      final doc = await storeGetOne(endpoint, id);
       final store = openStringKeyStore(endpoint);
       try {
-        final updatedDoc = await super.save(endpoint, doc!);
+        final updatedDoc = await super.save(endpoint, doc);
         updatedStore.record(id).delete(database);
         store.record(doc.id!).update(database, _storeAdapter.toMap(updatedDoc));
       } on HttpStatusException catch (_) {
@@ -190,8 +190,8 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
       final id = added.key;
       final endpoint = added.value['endpoint'].toString();
       final store = openStringKeyStore(endpoint);
-      final doc = peek(endpoint, id);
-      doc!.id = null;
+      final doc = await storeGetOne(endpoint, id);
+      doc.id = null;
       try {
         final updatedDoc = await super.save(endpoint, doc);
         addedStore.record(id).delete(database);
@@ -314,7 +314,7 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
     var store = openAddedStore();
     var added = await store.record(id).get(database);
     if (added == null) return null;
-    return peek(added['endpoint'].toString(), id);
+    return storeGetOne(added['endpoint'].toString(), id);
   }
 
   Future<JsonApiManyDocument> findAllPersisted(String endpoint) async {
