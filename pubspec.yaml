@@ -10,7 +10,9 @@ environment:
 dependencies:
   sembast: ^3.1.1
   path_provider: ^2.0.5
-  rest_data: ^1.1.0
+  rest_data:
+    git:
+      url: git://github.com/algonauti/dart-rest-data.git
   flutter:
     sdk: flutter
 
