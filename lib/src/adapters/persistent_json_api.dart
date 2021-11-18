@@ -1,11 +1,10 @@
+import 'package:flutter_rest_data/src/db_adapters/json_api.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rest_data/rest_data.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:sembast/sembast_memory.dart';
-
-import 'package:flutter_rest_data/src/db_adapters/json_api.dart';
 
 import '../exceptions.dart';
 
@@ -146,6 +145,12 @@ class PersistentJsonApiAdapter extends JsonApiAdapter {
           .put(database, _storeAdapter.toMap(doc));
       await openStringKeyStore(endpoint).record(doc.id!).delete(database);
     }
+  }
+
+  @override
+  void clearCache() {
+    // TODO
+    super.clearCache();
   }
 
   Future<JsonApiDocument> storeGetOne(String endpoint, String id) async {
